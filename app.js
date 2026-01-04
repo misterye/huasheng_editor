@@ -678,6 +678,12 @@ const editorApp = createApp({
   },
 
   methods: {
+    // 退出登录
+    logout() {
+      localStorage.removeItem('editor_auth_token');
+      window.location.href = 'login.html';
+    },
+
     loadStarredStyles() {
       try {
         const saved = localStorage.getItem('starredStyles');
@@ -2048,7 +2054,7 @@ const markdown = \`![图片](img://\${imageId})\`;
 
         // 简单的 div/span 结构（没有富文本语义标签）
         // 检查：有 HTML 标签，但几乎没有 <p>, <h1-h6>, <strong>, <em> 等富文本标签
-        function(html) {
+        function (html) {
           const hasDivSpan = /<(?:div|span)[\s>]/.test(html);
           const hasSemanticTags = /<(?:p|h[1-6]|strong|em|ul|ol|li|blockquote)[\s>]/i.test(html);
           // 如果有 div/span 但几乎没有语义标签，可能是代码编辑器
@@ -2056,7 +2062,7 @@ const markdown = \`![图片](img://\${imageId})\`;
         },
 
         // 检查 HTML 是否只是简单包裹纯文本（几乎没有格式化）
-        function(html) {
+        function (html) {
           // 去除所有 HTML 标签，看是否与纯文本几乎一致
           const strippedHtml = html.replace(/<[^>]+>/g, '').trim();
           const similarity = strippedHtml === textData.trim();
