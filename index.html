@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +10,60 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FTJSWC1Z5"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'G-5FTJSWC1Z5');
+  </script>
+
+  <!-- 鉴权检查 -->
+  <script>
+    (function () {
+      // 配置
+      const TOKEN_KEY = 'auth_token';
+      const TOKEN_EXPIRY_KEY = 'auth_token_expiry';
+      const AUTH_PAGE = '/auth.html';
+
+      // 检查是否已登录
+      function checkAuth() {
+        const token = localStorage.getItem(TOKEN_KEY);
+        const expiry = localStorage.getItem(TOKEN_EXPIRY_KEY);
+
+        // 如果没有 token 或过期时间，跳转到登录页
+        if (!token || !expiry) {
+          redirectToAuth();
+          return false;
+        }
+
+        // 检查是否过期
+        const now = Date.now();
+        const expiryTime = parseInt(expiry, 10);
+
+        if (now >= expiryTime) {
+          // Token 已过期，清除并跳转
+          localStorage.removeItem(TOKEN_KEY);
+          localStorage.removeItem(TOKEN_EXPIRY_KEY);
+          redirectToAuth();
+          return false;
+        }
+
+        // Token 有效
+        return true;
+      }
+
+      // 跳转到鉴权页面
+      function redirectToAuth() {
+        window.location.href = AUTH_PAGE;
+      }
+
+      // 页面加载前立即检查
+      if (!checkAuth()) {
+        // 阻止页面渲染
+        document.addEventListener('DOMContentLoaded', function (e) {
+          e.stopImmediatePropagation();
+        }, true);
+      }
+    })();
   </script>
 
   <!-- Favicon -->
@@ -548,6 +599,7 @@
         opacity: 0;
         transform: translateY(-10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -775,6 +827,7 @@
         transform: translateY(100px);
         opacity: 0;
       }
+
       to {
         transform: translateY(0);
         opacity: 1;
@@ -821,6 +874,7 @@
         opacity: 0;
         transform: translateY(20px) scale(0.95);
       }
+
       to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -903,6 +957,7 @@
         opacity: 0;
         transform: scale(0.95) translateY(10px);
       }
+
       to {
         opacity: 1;
         transform: scale(1) translateY(0);
@@ -1249,31 +1304,32 @@
     }
   </style>
 </head>
+
 <body>
   <div id="app">
     <!-- 顶部栏 -->
     <header class="header">
       <div class="logo">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20">
-          <rect width="32" height="32" rx="6" fill="#0066FF"/>
-          <path d="M6 10 L6 22 L9 22 L9 15 L13 20 L17 15 L17 22 L20 22 L20 10 L16 10 L13 14 L10 10 Z" fill="white"/>
-          <rect x="6" y="24" width="20" height="2" rx="1" fill="white" opacity="0.7"/>
+          <rect width="32" height="32" rx="6" fill="#0066FF" />
+          <path d="M6 10 L6 22 L9 22 L9 15 L13 20 L17 15 L17 22 L20 22 L20 10 L16 10 L13 14 L10 10 Z" fill="white" />
+          <rect x="6" y="24" width="20" height="2" rx="1" fill="white" opacity="0.7" />
         </svg>
         <span>公众号排版器</span>
-        <span class="creator-info">Created by <a href="https://huasheng.ai" target="_blank" rel="noopener noreferrer">花生</a></span>
+        <span class="creator-info">Created by <a href="https://huasheng.ai" target="_blank"
+            rel="noopener noreferrer">花生</a></span>
       </div>
       <div class="header-actions">
         <nav class="header-links">
           <a class="header-link" href="https://www.bookai.top" target="_blank" rel="noopener noreferrer">BookAI 主站</a>
-          <a class="header-link primary" href="https://nf.video/o9jj0s" target="_blank" rel="noopener noreferrer">AI产品购买</a>
+          <a class="header-link primary" href="https://nf.video/o9jj0s" target="_blank"
+            rel="noopener noreferrer">AI产品购买</a>
         </nav>
-        <a href="https://github.com/alchaincyf/huasheng_editor"
-           target="_blank"
-           rel="noopener noreferrer"
-           class="github-link"
-           title="查看源码">
+        <a href="https://github.com/alchaincyf/huasheng_editor" target="_blank" rel="noopener noreferrer"
+          class="github-link" title="查看源码">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            <path
+              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
           </svg>
         </a>
       </div>
@@ -1287,30 +1343,19 @@
           <div class="styles-list">
             <!-- 收藏的样式 -->
             <template v-if="starredStyles.length > 0">
-              <div
-                v-for="styleKey in starredStyles"
-                :key="'star-' + styleKey"
-                class="style-card starred"
-                :class="{ active: currentStyle === styleKey }"
-                @click="currentStyle = styleKey"
-              >
+              <div v-for="styleKey in starredStyles" :key="'star-' + styleKey" class="style-card starred"
+                :class="{ active: currentStyle === styleKey }" @click="currentStyle = styleKey">
                 {{ getStyleName(styleKey) }}
               </div>
               <div style="width: 1px; height: 20px; background: var(--color-light-border); margin: 0 4px;"></div>
             </template>
 
             <!-- 所有样式，添加推荐标识 -->
-            <div
-              v-for="(style, key) in STYLES"
-              :key="key"
-              class="style-card"
-              :class="{
+            <div v-for="(style, key) in STYLES" :key="key" class="style-card" :class="{
                 active: currentStyle === key,
                 starred: isStyleStarred(key),
                 recommended: isRecommended(key)
-              }"
-              @click="currentStyle = key"
-            >
+              }" @click="currentStyle = key">
               {{ style.name }}
             </div>
           </div>
@@ -1323,16 +1368,9 @@
       <!-- 编辑器面板 -->
       <div class="editor-panel">
         <div class="markdown-input-container">
-          <textarea
-            v-model="markdownInput"
-            class="markdown-input"
-            :class="{ 'drag-over': isDraggingOver }"
-            @paste="handleSmartPaste"
-            @drop="handleDrop"
-            @dragover="handleDragOver"
-            @dragenter="handleDragEnter"
-            @dragleave="handleDragLeave"
-            placeholder="# 在这里粘贴或输入 Markdown 内容
+          <textarea v-model="markdownInput" class="markdown-input" :class="{ 'drag-over': isDraggingOver }"
+            @paste="handleSmartPaste" @drop="handleDrop" @dragover="handleDragOver" @dragenter="handleDragEnter"
+            @dragleave="handleDragLeave" placeholder="# 在这里粘贴或输入 Markdown 内容
 
 ## 功能特点
 
@@ -1342,9 +1380,7 @@
 - **图片支持**：直接粘贴或拖拽图片，自动上传
 - **一键复制**：直接粘贴到公众号
 
-💡 提示：可以直接粘贴截图，或拖拽图片文件到这里"
-            spellcheck="false"
-          ></textarea>
+💡 提示：可以直接粘贴截图，或拖拽图片文件到这里" spellcheck="false"></textarea>
         </div>
 
         <!-- 编辑器底部工具栏 -->
@@ -1357,7 +1393,8 @@
                 <line x1="12" y1="3" x2="12" y2="15"></line>
               </svg>
               <span>上传 MD 文件</span>
-              <input type="file" id="file-upload" accept=".md,.markdown" @change="handleFileUpload" style="display: none;">
+              <input type="file" id="file-upload" accept=".md,.markdown" @change="handleFileUpload"
+                style="display: none;">
             </label>
             <div class="upload-hints">
               <span class="upload-hint">支持 .md / .markdown 文件</span>
@@ -1405,22 +1442,16 @@
             </div> -->
           </div>
           <div class="preview-actions">
-            <button
-              class="star-btn"
-              :class="{ active: isStyleStarred(currentStyle) }"
-              @click="toggleStarStyle(currentStyle)"
-              title="收藏此样式"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" :fill="isStyleStarred(currentStyle) ? 'currentColor' : 'none'">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            <button class="star-btn" :class="{ active: isStyleStarred(currentStyle) }"
+              @click="toggleStarStyle(currentStyle)" title="收藏此样式">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                :fill="isStyleStarred(currentStyle) ? 'currentColor' : 'none'">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                </path>
               </svg>
             </button>
-            <button
-              class="copy-btn"
-              :class="{ success: copySuccess }"
-              :disabled="!renderedContent"
-              @click="copyToClipboard"
-            >
+            <button class="copy-btn" :class="{ success: copySuccess }" :disabled="!renderedContent"
+              @click="copyToClipboard">
               {{ copySuccess ? '✓ 已复制' : '复制到公众号' }}
             </button>
           </div>
@@ -1430,7 +1461,8 @@
         <div class="preview-content">
           <div v-if="!renderedContent" class="empty-state">
             <svg class="empty-state-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <h3>开始编辑</h3>
             <p>左侧输入 Markdown，右侧实时预览</p>
@@ -1506,18 +1538,13 @@
           <span class="floating-ad__panel-title">🔥 热门推荐</span>
           <button class="floating-ad__collapse" @click="toggleFloatingAd" aria-label="收起">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M19 9l-7 7-7-7"/>
+              <path d="M19 9l-7 7-7-7" />
             </svg>
           </button>
         </div>
 
         <div class="floating-ad__list">
-          <div
-            v-for="ad in floatingAd.ads"
-            :key="ad.id"
-            class="floating-ad__item"
-            @click="openFloatingAd(ad)"
-          >
+          <div v-for="ad in floatingAd.ads" :key="ad.id" class="floating-ad__item" @click="openFloatingAd(ad)">
             <span class="floating-ad__icon">{{ ad.icon }}</span>
             <div class="floating-ad__info">
               <div class="floating-ad__header">
@@ -1529,8 +1556,9 @@
               <span class="floating-ad__subtitle">{{ ad.subtitle }}</span>
               <span v-if="ad.coupon" class="floating-ad__coupon">优惠码: {{ ad.coupon }}</span>
             </div>
-            <svg class="floating-ad__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 18l6-6-6-6"/>
+            <svg class="floating-ad__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <path d="M9 18l6-6-6-6" />
             </svg>
           </div>
         </div>
@@ -1542,13 +1570,8 @@
 
       <!-- 轮播指示器 -->
       <div v-if="!floatingAd.isExpanded" class="floating-ad__indicators">
-        <span
-          v-for="(ad, idx) in floatingAd.ads"
-          :key="ad.id"
-          class="floating-ad__indicator"
-          :class="{ active: idx === floatingAd.currentIndex }"
-          @click.stop="setFloatingAdIndex(idx)"
-        ></span>
+        <span v-for="(ad, idx) in floatingAd.ads" :key="ad.id" class="floating-ad__indicator"
+          :class="{ active: idx === floatingAd.currentIndex }" @click.stop="setFloatingAdIndex(idx)"></span>
       </div>
     </div>
 
@@ -1562,4 +1585,5 @@
   <script src="styles.js?v=2"></script>
   <script src="app.js?v=2"></script>
 </body>
+
 </html>

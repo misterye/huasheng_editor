@@ -65,6 +65,24 @@ python3 -m http.server 8080
 # 访问 http://localhost:8080
 ```
 
+### 🔒 访问鉴权（适用于部署到 Vercel/EdgeOne）
+
+本项目支持密码鉴权，保护你的编辑器不被他人随意访问。
+
+**功能特点**：
+- ✅ 密码验证后 24 小时内免登录
+- ✅ 密码从环境变量读取，安全可靠
+- ✅ 支持 Vercel 和 EdgeOne 平台
+- ✅ 美观的登录界面
+
+**部署步骤**：
+1. 在平台环境变量中设置 `ACCESS_PASSWORD`
+2. 访问网站时会自动跳转到登录页面
+3. 输入密码后即可正常使用
+
+详细配置请查看 [部署指南](DEPLOYMENT.md)。
+
+
 ## 🛠️ 技术栈
 
 - **Vue 3** - 渐进式前端框架
@@ -79,16 +97,24 @@ python3 -m http.server 8080
 
 ```
 公众号编辑器/
-├── index.html        # 主页面
-├── app.js           # Vue 应用逻辑
-├── styles.js        # 13 种样式主题配置
-├── icon.svg         # 项目图标
-├── favicon.svg      # 网站图标
-├── logo.svg         # Logo 图标
-├── start.sh         # 启动脚本
-├── README.md        # 项目说明
-├── CLAUDE.md        # 技术文档
-└── LICENSE          # 开源许可证
+├── index.html          # 主页面（已集成鉴权检查）
+├── auth.html           # 鉴权登录页面
+├── app.js              # Vue 应用逻辑
+├── styles.js           # 13 种样式主题配置
+├── api/
+│   └── auth.js         # Vercel Serverless Function
+├── edge-functions/
+│   └── auth.js         # EdgeOne 边缘函数
+├── icon.svg            # 项目图标
+├── favicon.svg         # 网站图标
+├── logo.svg            # Logo 图标
+├── vercel.json         # Vercel 部署配置
+├── .env.example        # 环境变量示例
+├── start.sh            # 启动脚本
+├── README.md           # 项目说明
+├── DEPLOYMENT.md       # 部署指南
+├── CLAUDE.md           # 技术文档
+└── LICENSE             # 开源许可证
 ```
 
 ## 💡 核心特性
